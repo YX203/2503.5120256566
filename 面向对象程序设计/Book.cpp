@@ -1,12 +1,12 @@
-#include "Book.h"
+﻿#include "Book.h"
 #include <iostream>
 
 Book::Book() {
-    barcode = "000000";
+    barcode = "001";
     isbn = "000-0-0000-0000-0";
-    title = "none";
-    author = "unknown";
-    publisher = "unknown";
+    title = "活着";
+    author = "余华";
+    publisher = "人民出版社";
     available = true;
 }
 
