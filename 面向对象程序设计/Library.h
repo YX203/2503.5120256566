@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LIBRARY_H
 #define LIBRARY_H
 #include <string>
