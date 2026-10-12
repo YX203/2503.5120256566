@@ -39,42 +39,48 @@ int main() {
     // ========== 实验二：组合关系 + 依赖关系 ==========
     cout << "\n========== 实验二：组合关系与依赖关系 ==========" << endl;
 
-    Library lib("西南科技大学逸夫图书馆");
-    lib.addBook(book1);
-    lib.addBook(book2);
-    lib.addBook(book3);
-    lib.addBook(Book("004", "9787302599709", "算法导论", "Thomas H.Cormen",
+    // 【修改点】使用 new 在堆区动态创建 Library 对象，避免栈溢出警告
+    Library* lib = new Library("西南科技大学逸夫图书馆");
+
+    lib->addBook(book1);
+    lib->addBook(book2);
+    lib->addBook(book3);
+    lib->addBook(Book("004", "9787302599709", "算法导论", "Thomas H.Cormen",
         "清华大学出版社", 128.0, 1312, true));
-    lib.addBook(Book("005", "9787115428028", "深入理解计算机系统", "Randal E.Bryant",
+    lib->addBook(Book("005", "9787115428028", "深入理解计算机系统", "Randal E.Bryant",
         "人民邮电出版社", 139.0, 813, true));
 
     Student stu1("5120256566", "江彦辉", "计算机科学与技术学院", 5);
     Student stu2("20230010", "李四", "计算机学院", 3);
-    lib.addStudent(stu1);
-    lib.addStudent(stu2);
+    lib->addStudent(stu1);
+    lib->addStudent(stu2);
 
-    lib.showInfo();
-    lib.showAllBooks();
+    lib->showInfo();
+    lib->showAllBooks();
 
     cout << "\n----- 依赖关系：借书操作 -----" << endl;
-    lib.borrowBook("5120256566", "001");
-    lib.borrowBook("5120256566", "002");
-    lib.borrowBook("20230010", "003");
-    lib.borrowBook("20230010", "001");
+    lib->borrowBook("5120256566", "001");
+    lib->borrowBook("5120256566", "002");
+    lib->borrowBook("20230010", "003");
+    lib->borrowBook("20230010", "001");
 
     cout << "\n----- 借阅后状态 -----" << endl;
-    lib.showAllBooks();
-    lib.showAllStudents();
+    lib->showAllBooks();
+    lib->showAllStudents();
 
     cout << "\n----- 删除未借出图书（安全演示） -----" << endl;
-    lib.removeBook("005");
-    lib.showAllBooks();
+    lib->removeBook("005");
+    lib->showAllBooks();
 
     cout << "\n----- 依赖关系：还书操作 -----" << endl;
-    lib.returnBook("5120256566", "001");
+    lib->returnBook("5120256566", "001");
 
     cout << "\n----- 归还后状态 -----" << endl;
-    lib.showAllStudents();
+    lib->showAllStudents();
+
+    // 【修改点】释放堆区内存
+    delete lib;
+    lib = nullptr;
 
     cout << "\n===== 程序结束 =====" << endl;
     return 0;
