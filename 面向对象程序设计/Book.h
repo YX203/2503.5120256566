@@ -1,48 +1,55 @@
 ﻿#pragma once
 #ifndef BOOK_H
 #define BOOK_H
-#include <string>
-using namespace std;
 
-// 图书类：实验一的单个类设计，实验二中作为被依赖/被组合的"部分类"
+#include <string>
+
 class Book {
 private:
-    string barcode;    // 图书条码
-    string isbn;       // ISBN号
-    string title;      // 书名
-    string author;     // 作者
-    string publisher;  // 出版社
-    double price;      // 价格
-    int pages;         // 页数
-    bool available;    // 在馆状态（true=可借，false=已借出）
+    std::string barcode;    // 图书条码
+    std::string isbn;       // ISBN号
+    std::string title;      // 书名
+    std::string author;     // 作者
+    std::string publisher;  // 出版社
+    double price;           // 价格
+    int pages;              // 页数
+    bool available;         // 在馆状态（true=可借，false=已借出）
+
+    static bool isValidIsbn(const std::string& isbn);
+
 public:
-    // 构造函数重载（实验一要求：默认构造 + 带参构造）
     Book();
-    Book(string bc, string ib, string t, string a, string p, double pr, int pg, bool av);
+    Book(std::string bc, std::string ib, std::string t, std::string a,
+        std::string p, double pr, int pg, bool av);
 
-    // 基本操作：输入、输出
     void input();
-    void show();
+    void show() const;
 
-    // 属性修改、获取接口（访问控制体现封装性）
-    void setBarcode(string bc);
-    string getBarcode();
-    void setIsbn(string ib);
-    string getIsbn();
-    void setTitle(string t);
-    string getTitle();
-    void setAuthor(string a);
-    string getAuthor();
-    void setPublisher(string p);
-    string getPublisher();
+    void setBarcode(std::string bc);
+    std::string getBarcode() const;
+
+    bool setIsbn(std::string ib);
+    std::string getIsbn() const;
+
+    void setTitle(std::string t);
+    std::string getTitle() const;
+
+    void setAuthor(std::string a);
+    std::string getAuthor() const;
+
+    void setPublisher(std::string p);
+    std::string getPublisher() const;
+
     void setPrice(double pr);
-    double getPrice();
-    void setPages(int pg);
-    int getPages();
-    void setAvailable(bool av);
-    bool getAvailable();
+    double getPrice() const;
 
-    // 扩展功能：验证ISBN合法性（13位纯数字）
-    bool checkIsbnValid();
+    void setPages(int pg);
+    int getPages() const;
+
+    void setAvailable(bool av);
+    bool getAvailable() const;
+
+    bool checkIsbnValid() const;
 };
+
 #endif

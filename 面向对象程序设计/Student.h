@@ -1,41 +1,41 @@
 ﻿#pragma once
 #ifndef STUDENT_H
 #define STUDENT_H
-#include <string>
-#include "Book.h"
-using namespace std;
 
-// 最大可借图书数常量（用于学生借阅记录数组大小）
+#include <string>
+
+class Book; // 前向声明
+
 const int MAX_BORROW_RECORD = 20;
 
-// 学生类：实验二依赖关系的"源类"——其成员函数以Book引用为参数
 class Student {
 private:
-    string id;                    // 学号
-    string name;                  // 姓名
-    string department;            // 院系
-    int maxBorrow;                // 最大借阅数量
-    int borrowedCount;            // 当前已借数量
-    Book* borrowedBooks[MAX_BORROW_RECORD]; // 已借图书指针数组（关联/聚合）
-public:
-    // 构造函数
-    Student();
-    Student(string sid, string sname, string dept, int max);
+    std::string id;                    // 学号
+    std::string name;                  // 姓名
+    std::string department;            // 院系
+    int maxBorrow;                     // 最大借阅数量
+    int borrowedCount;                 // 当前已借数量
 
-    // 核心功能：借书（依赖关系：传入Book对象引用，直接操作原对象）
+    // 用条码和书名副本记录借阅信息，避免保存 Book* 导致数组移动后指针失效
+    std::string borrowedBarcodes[MAX_BORROW_RECORD];
+    std::string borrowedTitles[MAX_BORROW_RECORD];
+
+public:
+    Student();
+    Student(std::string sid, std::string sname, std::string dept, int max);
+
+    // 依赖关系：参数为 Book 引用，直接操作原 Book 对象
     bool borrowBook(Book& book);
-    // 还书功能
     bool returnBook(Book& book);
 
-    // 显示学生信息（含已借图书列表）
-    void showInfo();
-    void showBorrowedBooks();
+    void showInfo() const;
+    void showBorrowedBooks() const;
 
-    // 获取接口
-    string getId();
-    string getName();
-    string getDepartment();
-    int getBorrowedCount();
-    int getMaxBorrow();
+    std::string getId() const;
+    std::string getName() const;
+    std::string getDepartment() const;
+    int getBorrowedCount() const;
+    int getMaxBorrow() const;
 };
+
 #endif
