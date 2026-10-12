@@ -20,13 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
+    <ClInclude Include="EBook.h" />
     <ClInclude Include="Library.h" />
+    <ClInclude Include="Magazine.h" />
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="Student.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="EBook.cpp" />
     <ClCompile Include="Library.cpp" />
+    <ClCompile Include="Magazine.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Student.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

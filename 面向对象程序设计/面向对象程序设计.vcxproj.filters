@@ -24,6 +24,15 @@
     <ClInclude Include="Student.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Magazine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EBook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp">
@@ -36,6 +45,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Student.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Magazine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EBook.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
