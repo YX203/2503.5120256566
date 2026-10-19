@@ -2,38 +2,37 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 
-#include <string>
+#include "Reader.h"
 
-class Resource; // 前向声明
-
-const int MAX_BORROW_RECORD = 20;
-
-class Student {
+// ============================================================
+// Student：学生借阅人，公有继承自 Reader（实验三）
+//   实验四：重写纯虚函数，给出"学生"这一身份的规则与显示方式。
+//   相比教师，学生最大借阅数量更少、罚金标准更高。
+// ============================================================
+class Student : public Reader {
 private:
-    std::string id;
-    std::string name;
-    std::string department;
-    int maxBorrow;
-    int borrowedCount;
-    std::string borrowedBarcodes[MAX_BORROW_RECORD];
-    std::string borrowedTitles[MAX_BORROW_RECORD];
+    std::string major;   // 专业（学生特有属性）
+    int         grade;   // 年级
 
 public:
     Student();
-    Student(std::string sid, std::string sname, std::string dept, int max);
+    Student(const std::string& sid, const std::string& sname,
+            const std::string& dept, int max = 5,
+            const std::string& majorName = "未填写", int gradeNo = 1);
 
-    // 依赖关系：参数为 Resource 引用
-    bool borrowBook(Resource& res);
-    bool returnBook(Resource& res);
+    // 重写基类纯虚函数（实验四：多态接口）
+    std::string getReaderType() const override;
+    int         getDefaultMaxBorrow() const override;
 
-    void showInfo() const;
-    void showBorrowedBooks() const;
+    // 重写基类虚函数
+    void print(std::ostream& os) const override;
 
-    std::string getId() const;
-    std::string getName() const;
-    std::string getDepartment() const;
-    int getBorrowedCount() const;
-    int getMaxBorrow() const;
+    // 学生特有属性的设置与获取
+    bool setMajor(const std::string& m);
+    bool setGrade(int g);
+
+    std::string getMajor() const;
+    int         getGrade() const;
 };
 
 #endif

@@ -20,20 +20,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
+    <ClInclude Include="BorrowRecord.h" />
     <ClInclude Include="EBook.h" />
     <ClInclude Include="Library.h" />
     <ClInclude Include="Magazine.h" />
+    <ClInclude Include="Reader.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Student.h" />
+    <ClInclude Include="Teacher.h" />
+    <ClInclude Include="TimeUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="BorrowRecord.cpp" />
     <ClCompile Include="EBook.cpp" />
     <ClCompile Include="Library.cpp" />
     <ClCompile Include="Magazine.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Reader.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Student.cpp" />
+    <ClCompile Include="Teacher.cpp" />
+    <ClCompile Include="TimeUtil.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

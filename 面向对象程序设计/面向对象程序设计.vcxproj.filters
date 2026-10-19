@@ -15,16 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Book.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Library.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Student.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Book.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Magazine.h">
@@ -33,27 +27,57 @@
     <ClInclude Include="EBook.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Reader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Student.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Teacher.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BorrowRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Library.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Book.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Library.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Student.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Resource.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Book.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Magazine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EBook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Reader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Student.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Teacher.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BorrowRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Library.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
