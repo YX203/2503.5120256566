@@ -71,6 +71,7 @@ void BorrowRecord::print(ostream& os) const {
     else {
         os << "未归还";
     }
+    os << defaultfloat << setprecision(6);   // 恢复默认浮点格式
 }
 
 void BorrowRecord::show() const {

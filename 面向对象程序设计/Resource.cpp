@@ -1,4 +1,5 @@
 ﻿#include "Resource.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -17,14 +18,17 @@ Resource::Resource(const string& bc, const string& t,
 }
 
 void Resource::print(ostream& os) const {
+    // 金额统一保留两位小数；输出结束后把浮点格式恢复成默认值，
+    // 避免"格式化状态"顺着流泄漏到后面其他输出里（iostream 的状态是粘的）
     os << "[" << getTypeName() << "] "
         << "条码：" << barcode
         << " | 名称：" << title
         << " | 出版社：" << publisher
-        << " | 价格：" << price << "元"
+        << " | 价格：" << fixed << setprecision(2) << price << "元"
         << " | 可借：" << getStockDesc()
         << " | 借期：" << getLendDays() << "天"
-        << " | 日罚金：" << getFinePerDay() << "元";
+        << " | 日罚金：" << fixed << setprecision(2) << getFinePerDay() << "元";
+    os << defaultfloat << setprecision(6);
 }
 
 void Resource::show() const {

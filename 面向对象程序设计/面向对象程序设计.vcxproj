@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Book.h" />
     <ClInclude Include="BorrowRecord.h" />
+    <ClInclude Include="Collection.h" />
     <ClInclude Include="EBook.h" />
     <ClInclude Include="Library.h" />
     <ClInclude Include="Magazine.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="Student.h" />
     <ClInclude Include="Teacher.h" />
     <ClInclude Include="TimeUtil.h" />
+    <ClInclude Include="VectorDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
@@ -42,6 +44,7 @@
     <ClCompile Include="Student.cpp" />
     <ClCompile Include="Teacher.cpp" />
     <ClCompile Include="TimeUtil.cpp" />
+    <ClCompile Include="VectorDemo.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
