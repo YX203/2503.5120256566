@@ -43,6 +43,18 @@ void Reader::show() const {
     cout << endl;
 }
 
+// 实验六：把借阅人的成员数据写成一行（基类字段），派生类补上自己的字段后换行
+void Reader::saveTo(ostream& os) const {
+    os << getReaderType() << '|' << id << '|' << name << '|' << department
+        << '|' << maxBorrow;
+}
+
+// 存盘时遍历全部记录用；返回常引用，避免拷贝整个 vector
+const vector<BorrowRecord>& Reader::getRecords() const { return records; }
+
+// 从文件读回时把一条记录塞回容器（vector::push_back）
+void Reader::addRecord(const BorrowRecord& rec) { records.push_back(rec); }
+
 // 借阅：这是"依赖关系"的具体体现 —— 参数是另一个类对象的引用
 bool Reader::borrowResource(Resource& res) {
     // 1. 判断资源状态

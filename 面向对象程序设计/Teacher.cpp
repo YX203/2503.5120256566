@@ -23,6 +23,12 @@ void Teacher::print(ostream& os) const {
     os << " | 职称：" << title << " | 所属学院：" << college;
 }
 
+// 实验六：基类字段 + 教师特有字段
+void Teacher::saveTo(ostream& os) const {
+    Reader::saveTo(os);
+    os << '|' << title << '|' << college << '\n';
+}
+
 bool Teacher::setTitle(const string& t) {
     if (t.empty()) {
         cout << "设置失败：职称不能为空。" << endl;

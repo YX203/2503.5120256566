@@ -52,6 +52,7 @@ public:
 
     // ---------------- 虚函数 ----------------
     virtual void print(std::ostream& os) const;   // 输出借阅人信息
+    virtual void saveTo(std::ostream& os) const;  // 实验六：写进文件流（派生类追加字段）
     void show() const;
 
     // ---------------- 借阅人的核心业务（实验二的依赖关系） ----------------
@@ -62,6 +63,10 @@ public:
     int  purgeReturned();   // 删除所有"已归还"的记录（erase-remove 惯用法）
     void clearRecords();    // 清空全部记录（vector::clear）
     int  getRecordCapacity() const;   // 供演示 vector::capacity
+
+    // ---------------- 实验六：供文件读写使用 ----------------
+    const std::vector<BorrowRecord>& getRecords() const;   // 读记录（存盘时遍历）
+    void addRecord(const BorrowRecord& rec);               // 从文件读回时补一条记录
 
     // ---------------- 统计 ----------------
     int    getBorrowedCount() const;      // 当前未归还的册数

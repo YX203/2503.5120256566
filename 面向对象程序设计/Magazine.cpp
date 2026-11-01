@@ -24,6 +24,12 @@ void Magazine::print(ostream& os) const {
         << " | 主编：" << editor;
 }
 
+// 实验六：基类字段 + 杂志特有字段
+void Magazine::saveTo(ostream& os) const {
+    Resource::saveTo(os);
+    os << '|' << issue << '|' << editor << '\n';
+}
+
 bool Magazine::setIssue(const string& iss) {
     if (iss.empty()) {
         cout << "设置失败：期号不能为空。" << endl;

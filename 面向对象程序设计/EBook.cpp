@@ -39,6 +39,12 @@ string EBook::getStockDesc() const {
     return "不限份数";
 }
 
+// 实验六：基类字段 + 电子资源特有字段
+void EBook::saveTo(ostream& os) const {
+    Resource::saveTo(os);
+    os << '|' << fileSize << '|' << downloadLink << '\n';
+}
+
 bool EBook::setFileSize(double size) {
     if (size <= 0.0) {
         cout << "设置失败：文件大小必须为正数。" << endl;

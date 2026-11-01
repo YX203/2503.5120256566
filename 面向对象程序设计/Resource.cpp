@@ -36,6 +36,15 @@ void Resource::show() const {
     cout << endl;
 }
 
+// 实验六：把对象的成员变量值写成一行文本（"对象的保存"就是把成员数据存到文件里）。
+// 基类只写公共字段，行尾不换行，由派生类补上自己的字段后再换行。
+void Resource::saveTo(ostream& os) const {
+    os << getTypeName() << '|' << barcode << '|' << title << '|' << publisher
+        << '|' << fixed << setprecision(2) << price
+        << defaultfloat << setprecision(6)      // 恢复默认精度，免得后面的小数被截断
+        << '|' << stock << '|' << totalCount;
+}
+
 bool Resource::borrowOne() {
     if (stock <= 0) return false;
     --stock;

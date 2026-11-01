@@ -41,6 +41,10 @@ public:
 
     // ---------------- 虚函数（有默认实现，派生类可重写） ----------------
     virtual void print(std::ostream& os) const;    // 把信息输出到指定流
+
+    // 实验六（文件流）：把本对象的数据成员写进输出流（一行，'|' 分隔）。
+    // 是虚函数，派生类重写后追加自己的字段 —— 一个容器里混装多种资源也能一次存盘。
+    virtual void saveTo(std::ostream& os) const;
     virtual bool borrowOne();                      // 借出一本：可借数量 -1
     virtual bool returnOne();                      // 归还一本：可借数量 +1
     virtual std::string getStockDesc() const;      // 可借数量的显示文字（派生类可重写）

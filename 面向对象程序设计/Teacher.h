@@ -26,6 +26,7 @@ public:
 
     // 重写基类虚函数
     void print(std::ostream& os) const override;
+    void saveTo(std::ostream& os) const override;   // 实验六：补上职称、学院
 
     // 教师特有属性的设置与获取
     bool setTitle(const std::string& t);

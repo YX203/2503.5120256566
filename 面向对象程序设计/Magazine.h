@@ -26,6 +26,7 @@ public:
 
     // 重写基类虚函数
     void print(std::ostream& os) const override;
+    void saveTo(std::ostream& os) const override;   // 实验六：补上杂志特有字段
 
     // 新增成员函数的设置与获取
     bool setIssue(const std::string& iss);

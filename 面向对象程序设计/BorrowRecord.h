@@ -31,6 +31,11 @@ public:
     BorrowRecord(const std::string& bc, const std::string& t,
                  const std::string& type, int lendDays, double rate);
 
+    // 实验六：从文件读回时用的构造函数 —— 各字段直接由文件里的数据还原
+    BorrowRecord(const std::string& bc, const std::string& t, const std::string& type,
+                 time_t bt, time_t dt, time_t rt, bool ret,
+                 double rate, double fineValue);
+
     bool   isOverdue() const;        // 是否逾期
     int    overdueDays() const;      // 逾期天数
     double computeFine() const;      // 按日罚金计算应缴罚金

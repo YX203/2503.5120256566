@@ -26,6 +26,7 @@ public:
 
     // 重写基类虚函数
     void print(std::ostream& os) const override;
+    void saveTo(std::ostream& os) const override;   // 实验六：补上专业、年级
 
     // 学生特有属性的设置与获取
     bool setMajor(const std::string& m);

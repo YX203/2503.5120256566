@@ -17,6 +17,14 @@ BorrowRecord::BorrowRecord(const string& bc, const string& t,
     dueTime = TimeUtil::addDays(borrowTime, lendDays);
 }
 
+// 实验六：各字段直接由文件数据还原，不再取当前时间
+BorrowRecord::BorrowRecord(const string& bc, const string& t, const string& type,
+                           time_t bt, time_t dt, time_t rt, bool ret,
+                           double rate, double fineValue)
+    : barcode(bc), title(t), typeName(type), borrowTime(bt), dueTime(dt),
+      returnTime(rt), returned(ret), fineRate(rate > 0 ? rate : 0.0), fine(fineValue) {
+}
+
 bool BorrowRecord::isOverdue() const {
     time_t check = returned ? returnTime : TimeUtil::now();
     return TimeUtil::daysBetween(check, dueTime) > 0;

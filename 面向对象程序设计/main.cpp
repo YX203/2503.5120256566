@@ -4,7 +4,7 @@
 // 题目来源：《面向对象程序设计（C++）实验指导书》
 //           基础题目三：图书馆借阅管理系统
 //
-// 本版本覆盖的知识点（实验一 ~ 实验五，逐次递增，前面的要求全部保留）：
+// 本版本覆盖的知识点（实验一 ~ 实验六，逐次递增，前面的要求全部保留）：
 //   实验一  类与对象：类的设计、访问控制、构造/重载构造、数据合法性校验、
 //                     单一职责、资源管理类的三大函数
 //   实验二  组合与依赖：Library 组合资源容器与借阅人容器；
@@ -17,6 +17,9 @@
 //   实验五  模板与 vector：PtrCollection<T> 类模板（内部 std::vector<T*>）、
 //                       push_back / emplace_back / size / capacity /
 //                       begin / end / erase / clear，全面取代定长数组
+//   实验六  输入输出流：Storage 模块用 fstream（ofstream / ifstream）
+//                       把对象的成员数据存成文本文件，重启后可以读回来；
+//                       存盘走虚函数 saveTo()，读盘按类型标记 new 对应派生类
 //
 // 所有功能都有完整的键盘输入与屏幕输出。
 // ============================================================
@@ -28,6 +31,7 @@
 #include "Library.h"
 #include "TimeUtil.h"
 #include "VectorDemo.h"
+#include "Storage.h"
 
 #include <iostream>
 #include <string>
@@ -86,13 +90,16 @@ void showMenu() {
     cout << " 13. 查看全部借阅记录" << endl;
     cout << " 14. 查看图书馆统计信息" << endl;
     cout << " 15. 模拟时间推进（用于演示逾期罚款）" << endl;
-    cout << " ---------- 实验五：模板与 vector 容器 ----------" << endl;
     cout << " 16. 演示 vector 放对象：增 / 删 / 清空 / 容量变化" << endl;
     cout << " 17. 演示基类指针 vector：一个容器装多种资源（多态）" << endl;
     cout << " 18. 按资源类型统计（迭代器 + 虚函数）" << endl;
     cout << " 19. 清理某借阅人已归还的记录（vector::erase 区间删除）" << endl;
     cout << " 20. 注销借阅人（vector::erase 按位置删除）" << endl;
     cout << " 21. 清空全部数据（vector::clear 回收内存）" << endl;
+    cout << " 22. 保存全部数据到文件（ofstream 写 resources/readers/records.txt）" << endl;
+    cout << " 23. 从文件读取全部数据（ifstream 逐行还原对象）" << endl;
+    cout << " 24. 导出可读报表 report.txt（ofstream）" << endl;
+    cout << " 25. 查看数据文件内容（ifstream 读回屏幕）" << endl;
     cout << "  0. 退出系统" << endl;
     cout << "========================================================" << endl;
 }
@@ -223,7 +230,7 @@ void runMenu(Library& lib) {
     int choice = -1;
     while (true) {
         showMenu();
-        choice = readInt("请输入你的选择(0-21): ");
+        choice = readInt("请输入你的选择(0-25): ");
         if (choice == 0) {
             cout << "感谢使用，系统正在退出..." << endl;
             break;
@@ -349,6 +356,7 @@ void runMenu(Library& lib) {
             int ok = readInt("确认清空全部馆藏与借阅人数据？(1=确认，其他=取消): ");
             if (ok == 1) {
                 lib.clearAllData();
+                cout << "已清空全部馆藏与借阅人数据（vector::clear 已回收内存）。" << endl;
                 lib.showInfo();
             }
             else {
@@ -356,8 +364,26 @@ void runMenu(Library& lib) {
             }
             break;
         }
+
+        // ---------------- 实验六相关：文件输入输出流 ----------------
+        case 22:
+            Storage::saveAll(lib);
+            break;
+
+        case 23:
+            Storage::loadAll(lib);
+            break;
+
+        case 24:
+            Storage::exportReport(lib);
+            break;
+
+        case 25:
+            Storage::showDataFiles();
+            break;
+
         default:
-            cout << "无效的选择，请输入 0 ~ 21 之间的数字。" << endl;
+            cout << "无效的选择，请输入 0 ~ 25 之间的数字。" << endl;
             break;
         }
     }
@@ -367,7 +393,11 @@ int main() {
     // 图书馆对象用 new 创建在堆上（实验三：new / delete 的使用）
     Library* lib = new Library("西南科技大学逸夫图书馆");
 
-    initDemoData(*lib);
+    // 实验六：启动时先用 ifstream 把上次存盘的数据读回来；
+    // 没有数据文件（或文件打不开）才载入演示数据。
+    if (!Storage::loadAll(*lib)) {
+        initDemoData(*lib);
+    }
 
     try {
         runMenu(*lib);
@@ -376,6 +406,9 @@ int main() {
         // 输入流结束等异常在这里统一收口，程序仍能优雅退出
         cout << "\n" << e.what() << "，系统退出。" << endl;
     }
+
+    // 实验六：关闭应用程序时用 ofstream 把（可能已经修改过的）数据存回去
+    Storage::saveAll(*lib);
 
     // 释放图书馆对象；其成员容器析构时会 delete 掉所有资源和借阅人对象
     delete lib;

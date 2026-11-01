@@ -31,6 +31,7 @@
     <ClInclude Include="Teacher.h" />
     <ClInclude Include="TimeUtil.h" />
     <ClInclude Include="VectorDemo.h" />
+    <ClInclude Include="Storage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="Teacher.cpp" />
     <ClCompile Include="TimeUtil.cpp" />
     <ClCompile Include="VectorDemo.cpp" />
+    <ClCompile Include="Storage.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

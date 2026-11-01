@@ -42,6 +42,12 @@ void Book::print(ostream& os) const {
         << " | 页数：" << pages;
 }
 
+// 实验六：基类字段 + 图书特有字段，一行一条记录
+void Book::saveTo(ostream& os) const {
+    Resource::saveTo(os);
+    os << '|' << isbn << '|' << author << '|' << pages << '\n';
+}
+
 bool Book::setAuthor(const string& a) {
     if (a.empty()) {
         cout << "设置失败：作者不能为空。" << endl;

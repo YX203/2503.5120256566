@@ -262,10 +262,10 @@ void Library::showInfo() const {
         << " 个指针槽位，借阅人 vector " << readers.capacity() << " 个指针槽位" << endl;
 }
 
+// 清空整馆数据：容器析构式的统一回收（同时也被 Storage::loadAll 用来清理旧数据）
 void Library::clearAllData() {
     resources.clearAll();   // delete 全部资源 + vector::clear
     readers.clearAll();     // delete 全部借阅人 + vector::clear
-    cout << "已清空全部馆藏与借阅人数据（vector::clear 已回收内存）。" << endl;
 }
 
 string Library::getName() const { return name; }

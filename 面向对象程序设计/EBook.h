@@ -28,6 +28,7 @@ public:
 
     // 重写基类虚函数：电子资源不限份数
     void print(std::ostream& os) const override;
+    void saveTo(std::ostream& os) const override;   // 实验六：补上电子资源特有字段
     bool borrowOne() override;
     bool returnOne() override;
     std::string getStockDesc() const override;

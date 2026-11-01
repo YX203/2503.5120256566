@@ -30,6 +30,12 @@ void Student::print(ostream& os) const {
     os << " | 专业：" << major << " | 年级：" << grade << "年级";
 }
 
+// 实验六：基类字段 + 学生特有字段
+void Student::saveTo(ostream& os) const {
+    Reader::saveTo(os);
+    os << '|' << major << '|' << grade << '\n';
+}
+
 bool Student::setMajor(const string& m) {
     if (m.empty()) {
         cout << "设置失败：专业不能为空。" << endl;
