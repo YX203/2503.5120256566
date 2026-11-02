@@ -70,7 +70,17 @@ T readValue(const string& prompt) {
 // 三个"薄壳"函数，只是让调用处更可读，内部共用同一个函数模板
 int    readInt(const string& prompt) { return readValue<int>(prompt); }
 double readDouble(const string& prompt) { return readValue<double>(prompt); }
-string readString(const string& prompt) { return readValue<string>(prompt); }
+
+// 字符串单独用 getline 读一整行：书名、姓名、出版社里常有空格
+// （比如 "C++ Primer"），用 cin >> 只会读到空格前那一段，
+// 剩下的字符会串到下一次输入里去。
+string readString(const string& prompt) {
+    cout << prompt;
+    string line;
+    if (!getline(cin, line)) throw runtime_error("检测到输入结束");
+    if (!line.empty() && line.back() == '\r') line.pop_back();   // 兼容 CRLF 文本
+    return line;
+}
 
 // ---------------- 菜单 ----------------
 void showMenu() {
@@ -100,6 +110,9 @@ void showMenu() {
     cout << " 23. 从文件读取全部数据（ifstream 逐行还原对象）" << endl;
     cout << " 24. 导出可读报表 report.txt（ofstream）" << endl;
     cout << " 25. 查看数据文件内容（ifstream 读回屏幕）" << endl;
+    cout << " 26. 修改资源信息（名称/出版社/价格/数量/类型专属字段）" << endl;
+    cout << " 27. 修改借阅人信息（姓名/院系/上限/身份专属字段）" << endl;
+    cout << " 28. 查询某一借阅人（详细信息 + 借阅记录）" << endl;
     cout << "  0. 退出系统" << endl;
     cout << "========================================================" << endl;
 }
@@ -169,6 +182,17 @@ void addReaderUI(Library& lib) {
     string dept = readString("院系: ");
     int    max = readInt("最大借阅数量: ");
 
+    // 合法性校验（实验一）：超出合理范围时按身份默认上限处理，并说明原因
+    if (max < 1) {
+        max = (type == 1 ? 5 : 10);
+        cout << "  输入不合法，已按" << (type == 1 ? "学生" : "教师")
+            << "默认上限 " << max << " 本处理。" << endl;
+    }
+    else if (max > MAX_BORROW_LIMIT) {
+        max = MAX_BORROW_LIMIT;
+        cout << "  超过系统上限，已按 " << MAX_BORROW_LIMIT << " 本处理。" << endl;
+    }
+
     Reader* r = nullptr;
     if (type == 1) {
         string major = readString("专业: ");
@@ -194,6 +218,188 @@ void addReaderUI(Library& lib) {
     else {
         delete r;
     }
+}
+
+// ---------------- 补充功能：修改资源 / 修改借阅人 / 查询借阅人 ----------------
+// 对应指导书"项目答辩（设计报告2）· 题目3"的需求：
+//   添加借阅人信息、修改借阅人信息、添加图书或资源信息、修改图书或资源信息、
+//   查看图书信息、查询以上信息。
+//
+// 这两个"修改"同时用到实验四的知识点：手上只有基类指针 Resource* / Reader*，
+// 却要改派生类自己的字段（ISBN、专业、职称……），于是用 dynamic_cast 向下转型；
+// 转型不成功会返回 nullptr，正好可以安全地判断"它到底是哪一类"。
+
+// 修改资源信息
+void modifyResourceUI(Library& lib) {
+    string bc = readString("要修改的资源条码（条码是主键，不可修改）: ");
+    Resource* res = lib.findResource(bc);
+    if (res == nullptr) {
+        cout << "修改失败：未找到条码为 " << bc << " 的资源。" << endl;
+        return;
+    }
+
+    cout << "\n修改前的信息：" << endl;
+    cout << *res << endl;
+
+    cout << "\n可修改的项目：" << endl;
+    cout << "  1. 名称" << endl;
+    cout << "  2. 出版社 / 出品方" << endl;
+    cout << "  3. 价格" << endl;
+    cout << "  4. 馆藏总数量（含外借中的副本）" << endl;
+    cout << "  5. 该类型资源的专属信息（ISBN / 作者 / 期号 / 大小 等）" << endl;
+    cout << "  6. 以上全部修改" << endl;
+    cout << "  0. 取消" << endl;
+    int sel = readInt("请选择: ");
+    if (sel == 0) {
+        cout << "已取消。" << endl;
+        return;
+    }
+    if (sel < 1 || sel > 6) {
+        cout << "无效的选择，修改取消。" << endl;
+        return;
+    }
+
+    bool changed = false;
+
+    // 基类字段：直接用基类的 set 函数，不需要知道是哪一类资源
+    if (sel == 1 || sel == 6) {
+        if (res->setTitle(readString("新名称: "))) changed = true;
+    }
+    if (sel == 2 || sel == 6) {
+        if (res->setPublisher(readString("新出版社/出品方: "))) changed = true;
+    }
+    if (sel == 3 || sel == 6) {
+        if (res->setPrice(readDouble("新价格(元): "))) changed = true;
+    }
+    if (sel == 4 || sel == 6) {
+        // 改的是"馆藏总数量"：算出差值后走 addStock / reduceStock，
+        // 这样 stock 与 totalCount 始终同步，也不会把外借中的副本减掉。
+        int newTotal = readInt("新的馆藏总数量(册): ");
+        if (newTotal < 1) {
+            cout << "数量修改失败：馆藏总数量至少为 1 册。" << endl;
+        }
+        else {
+            int  delta = newTotal - res->getTotalCount();
+            bool ok = true;
+            if (delta > 0)      ok = res->addStock(delta);
+            else if (delta < 0) ok = res->reduceStock(-delta);
+            if (ok && delta != 0) changed = true;
+        }
+    }
+    if (sel == 5 || sel == 6) {
+        // 派生类字段：必须先向下转型，转型失败说明类型不匹配
+        if (Book* b = dynamic_cast<Book*>(res)) {
+            if (b->setAuthor(readString("新作者: ")))        changed = true;
+            if (b->setPages(readInt("新页数: ")))            changed = true;
+            if (b->setIsbn(readString("新ISBN(13位数字): "))) changed = true;
+        }
+        else if (Magazine* m = dynamic_cast<Magazine*>(res)) {
+            if (m->setIssue(readString("新期号: ")))  changed = true;
+            if (m->setEditor(readString("新主编: "))) changed = true;
+        }
+        else if (EBook* e = dynamic_cast<EBook*>(res)) {
+            if (e->setFileSize(readDouble("新文件大小(MB): ")))    changed = true;
+            if (e->setDownloadLink(readString("新下载链接: ")))   changed = true;
+        }
+    }
+
+    if (changed) {
+        cout << "\n修改完成，当前信息：" << endl;
+        cout << *res << endl;
+    }
+    else {
+        cout << "\n没有任何字段被修改（输入值不合法，或改成了与原来相同的值）。" << endl;
+    }
+}
+
+// 修改借阅人信息
+void modifyReaderUI(Library& lib) {
+    string id = readString("要修改的借阅人编号（学号/工号是主键，不可修改）: ");
+    Reader* r = lib.findReader(id);
+    if (r == nullptr) {
+        cout << "修改失败：未找到编号为 " << id << " 的借阅人。" << endl;
+        return;
+    }
+
+    cout << "\n修改前的信息：" << endl;
+    cout << *r << endl;
+
+    cout << "\n可修改的项目：" << endl;
+    cout << "  1. 姓名" << endl;
+    cout << "  2. 院系" << endl;
+    cout << "  3. 最大借阅数量" << endl;
+    cout << "  4. 身份专属信息（学生：专业/年级；教师：职称/学院）" << endl;
+    cout << "  5. 以上全部修改" << endl;
+    cout << "  0. 取消" << endl;
+    int sel = readInt("请选择: ");
+    if (sel == 0) {
+        cout << "已取消。" << endl;
+        return;
+    }
+    if (sel < 1 || sel > 5) {
+        cout << "无效的选择，修改取消。" << endl;
+        return;
+    }
+
+    bool changed = false;
+
+    if (sel == 1 || sel == 5) {
+        if (r->setName(readString("新姓名: "))) changed = true;
+    }
+    if (sel == 2 || sel == 5) {
+        if (r->setDepartment(readString("新院系: "))) changed = true;
+    }
+    if (sel == 3 || sel == 5) {
+        if (r->setMaxBorrow(readInt("新的最大借阅数量: "))) changed = true;
+    }
+    if (sel == 4 || sel == 5) {
+        if (Student* s = dynamic_cast<Student*>(r)) {
+            if (s->setMajor(readString("新专业: ")))      changed = true;
+            if (s->setGrade(readInt("新年级(1-5): ")))    changed = true;
+        }
+        else if (Teacher* t = dynamic_cast<Teacher*>(r)) {
+            if (t->setTitle(readString("新职称: ")))          changed = true;
+            if (t->setCollege(readString("新所属学院: ")))    changed = true;
+        }
+    }
+
+    if (changed) {
+        cout << "\n修改完成，当前信息：" << endl;
+        cout << *r << endl;
+        cout << "（退出系统或选择保存时会写回 readers.txt，下次启动仍然有效）" << endl;
+    }
+    else {
+        cout << "\n没有任何字段被修改（输入值不合法，或改成了与原来相同的值）。" << endl;
+    }
+}
+
+// 查询某一借阅人：先按编号找，找不到再按姓名找
+void queryReaderUI(Library& lib) {
+    string key = readString("请输入借阅人编号(学号/工号)或姓名: ");
+
+    Reader* r = lib.findReader(key);
+    if (r == nullptr) {
+        // 编号没找到，退一步按姓名匹配（遍历容器，只取第一个命中的）
+        lib.forEachReader([&key, &r](Reader* one) {
+            if (r == nullptr && one->getName() == key) r = one;
+        });
+    }
+    if (r == nullptr) {
+        cout << "查询失败：没有编号或姓名为 " << key << " 的借阅人。" << endl;
+        return;
+    }
+
+    cout << "\n===== 借阅人详情 =====" << endl;
+    cout << *r << endl;
+    cout << "  身份：" << r->getReaderType()
+        << " | 可借上限：" << r->getMaxBorrow()
+        << " 册 | 已借：" << r->getBorrowedCount()
+        << " 册 | 还可借：" << (r->getMaxBorrow() - r->getBorrowedCount()) << " 册" << endl;
+    cout << "  逾期：" << r->getOverdueCount() << " 册 | 未缴罚金："
+        << fixed << setprecision(2) << r->getUnpaidFine()
+        << " 元 | 历史累计罚金：" << r->getTotalFine() << " 元"
+        << defaultfloat << setprecision(6) << endl;
+    r->showRecords();
 }
 
 // 预先载入的演示数据
@@ -230,7 +436,7 @@ void runMenu(Library& lib) {
     int choice = -1;
     while (true) {
         showMenu();
-        choice = readInt("请输入你的选择(0-25): ");
+        choice = readInt("请输入你的选择(0-28): ");
         if (choice == 0) {
             cout << "感谢使用，系统正在退出..." << endl;
             break;
@@ -382,8 +588,21 @@ void runMenu(Library& lib) {
             Storage::showDataFiles();
             break;
 
+        // ---------------- 补充功能：修改与查询 ----------------
+        case 26:
+            modifyResourceUI(lib);
+            break;
+
+        case 27:
+            modifyReaderUI(lib);
+            break;
+
+        case 28:
+            queryReaderUI(lib);
+            break;
+
         default:
-            cout << "无效的选择，请输入 0 ~ 25 之间的数字。" << endl;
+            cout << "无效的选择，请输入 0 ~ 28 之间的数字。" << endl;
             break;
         }
     }

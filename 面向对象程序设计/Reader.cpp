@@ -233,6 +233,14 @@ bool Reader::setMaxBorrow(int max) {
         cout << "设置失败：最大借阅数量必须在 0 ~ " << MAX_BORROW_LIMIT << " 之间。" << endl;
         return false;
     }
+    // 业务不变式：上限不能低于手上还没归还的册数，否则"已借/上限"会自相矛盾。
+    // 校验放在类里而不是菜单里 —— 这正是封装的意义：不管谁调用这个函数，
+    // 对象都不会被改成不合法的状态。
+    if (max < getBorrowedCount()) {
+        cout << "设置失败：该借阅人还有 " << getBorrowedCount()
+            << " 册未归还，上限不能小于这个数。" << endl;
+        return false;
+    }
     maxBorrow = max;
     return true;
 }
